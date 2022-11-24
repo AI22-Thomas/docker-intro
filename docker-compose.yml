@@ -11,6 +11,12 @@ services:
     build:
       context: app
       dockerfile: Dockerfile
+    volumes:
+      # Persisting in volume
+      # - todo-db:/etc/todos/
+      - ./todo-db:/etc/todos/
+      - ./app:/app
+    entrypoint: sh -c "yarn install && yarn run dev"
     ports:
       - 8080:3000
 
@@ -18,3 +24,8 @@ services:
     image: registry:2
     ports:
       - 5000:5000
+
+
+# Persisting in volume
+# volumes:
+#   todo-db: { }
