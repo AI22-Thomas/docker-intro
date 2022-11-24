@@ -8,9 +8,19 @@ services:
 
   intro-app:
     image: localhost:5000/intro-app:0.0.1
-    build:
-      context: app
-      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    networks:
+      - db-net
+    # Remove build context to use local registry to get the image.
+    # build:
+    #  context: app
+    #  dockerfile: Dockerfile
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: example
+      MYSQL_DB: todos
     volumes:
       # Persisting in volume
       # - todo-db:/etc/todos/
@@ -20,12 +30,28 @@ services:
     ports:
       - 8080:3000
 
+  mysql:
+    image: mysql:5.7
+    networks:
+      - db-net
+    volumes:
+      - mysql-db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: todos
+
   registry:
     image: registry:2
     ports:
       - 5000:5000
+    volumes:
+      - registry-data:/var/lib/registry
 
+networks:
+  db-net: { }
 
-# Persisting in volume
-# volumes:
-#   todo-db: { }
+volumes:
+  # Persisting in volume
+  #   todo-db: { }
+  mysql-db: { }
+  registry-data: { }
