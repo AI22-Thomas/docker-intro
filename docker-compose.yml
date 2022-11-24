@@ -7,9 +7,14 @@ services:
       - 80:80
 
   intro-app:
-    image: intro-app:latest
+    image: localhost:5000/intro-app:0.0.1
     build:
       context: app
       dockerfile: Dockerfile
     ports:
       - 8080:3000
+
+  registry:
+    image: registry:2
+    ports:
+      - 5000:5000
